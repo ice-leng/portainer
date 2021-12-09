@@ -2,6 +2,14 @@ version: '3.5'
 
 # swarm-test-01
 
+networks:
+  apisix:
+    external: true
+  loki:
+    external: true
+  storage:
+    external: true
+
 services:
   redis:
     image: redis
@@ -19,12 +27,3 @@ services:
       placement:
         constraints:
           - node.hostname == swarm-test-01
-
-networks:
-  apisix:
-    external: true
-  loki:
-    external: true
-  storage:
-    external: true
-
