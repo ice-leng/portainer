@@ -13,7 +13,6 @@ networks:
 services:
   redis:
     image: redis
-    container_name: redis
     volumes:
       - /data/redis:/data:rw
     networks:
