@@ -3,11 +3,11 @@ version: '3.5'
 # swarm-test-01
 
 networks:
+  storage:
+    external: true
   apisix:
     external: true
   loki:
-    external: true
-  storage:
     external: true
 
 services:
