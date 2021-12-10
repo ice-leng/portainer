@@ -32,6 +32,7 @@ services:
     restart: unless-stopped
     volumes:
       - /data/config/apisix/dashboard.yml:/usr/local/apisix-dashboard/conf/conf.yaml
+      - /data/apisix/log/dashboard:/data/log
     ports:
       - "9099:9099"
     networks:
