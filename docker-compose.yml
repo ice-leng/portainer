@@ -14,7 +14,7 @@ services:
   redis:
     image: redis
     volumes:
-      - /data/redis:/data:rw
+      - /root/data/redis:/data:rw
     networks:
       - storage
     ports:
