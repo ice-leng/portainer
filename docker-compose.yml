@@ -16,7 +16,7 @@ services:
     restart: unless-stopped
     volumes:
       - /data/apisix/log:/usr/local/apisix/logs
-      - /data/apisix/conf.yaml:/usr/local/apisix/conf/config.yaml:ro
+      - ./config/apisix/conf.yaml:/usr/local/apisix/conf/config.yaml:ro
     depends_on:
       - etcd
     ports:
@@ -33,7 +33,7 @@ services:
     image: apache/apisix-dashboard:2.9.0
     restart: unless-stopped
     volumes:
-      - /data/apisix/dashboard.yml:/usr/local/apisix-dashboard/conf/conf.yaml
+      - ./config/apisix/dashboard.yml:/usr/local/apisix-dashboard/conf/conf.yaml
     ports:
       - "9099:9099"
     networks:
@@ -72,7 +72,7 @@ services:
       - "3100:3100"
     volumes:
       - /data/loki:/etc/loki
-      - ./config:/etc/loki/config
+      - ./config/loki:/etc/loki/config
       - /data/loki/index:/opt/loki/index
       - /data/loki/chunks:/opt/loki/chunks
     command: -config.file=/etc/loki/local-config.yaml
