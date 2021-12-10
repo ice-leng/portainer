@@ -11,6 +11,132 @@ networks:
     external: true
 
 services:
+  apisix:
+    image: apache/apisix:2.10.0-alpine
+    restart: unless-stopped
+    volumes:
+      - /data/apisix/log:/usr/local/apisix/logs
+      - /data/apisix/conf.yaml:/usr/local/apisix/conf/config.yaml:ro
+    depends_on:
+      - etcd
+    ports:
+      - "9080:9080/tcp"
+      - "9091:9091/tcp"
+    networks:
+      - apisix
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == swarm-test-01
+
+  apisix-dashboard:
+    image: apache/apisix-dashboard:2.9.0
+    restart: unless-stopped
+    volumes:
+      - /data/apisix/dashboard.yml:/usr/local/apisix-dashboard/conf/conf.yaml
+    ports:
+      - "9099:9099"
+    networks:
+      apisix:
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == swarm-test-01
+
+  etcd:
+    image: bitnami/etcd:3.4.9
+    user: root
+    restart: unless-stopped
+    volumes:
+      - /data/etcd_data:/etcd_data
+    environment:
+      ETCD_DATA_DIR: /etcd_data
+      ETCD_ENABLE_V2: "true"
+      ALLOW_NONE_AUTHENTICATION: "yes"
+      ETCD_ADVERTISE_CLIENT_URLS: "http://0.0.0.0:2379"
+      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
+    ports:
+      - "2379:2379/tcp"
+    networks:
+      - apisix
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == swarm-test-01
+
+  loki:
+    image: grafana/loki:2.3.0
+    user: "root:root"
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    volumes:
+      - /data/loki:/etc/loki
+      - ./config:/etc/loki/config
+      - /data/loki/index:/opt/loki/index
+      - /data/loki/chunks:/opt/loki/chunks
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - loki
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == swarm-test-01
+
+    #  promtail:
+    #    image: grafana/promtail:latest
+    #    restart: unless-stopped
+    #    volumes:
+    #      - /data/promtail/logs:/var/logs
+    #      - ./config:/etc/promtail/config
+    #      - ./nginx/logs:/logs
+    #    command: -config.file=/etc/promtail/config/promtail-config.yaml
+    #    networks:
+    #      - loki
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    privileged: true
+    user: root
+    ports:
+      - 3000:3000
+    volumes:
+      - /data/grafana/data:/var/lib/grafana
+      - /data/grafana/log:/var/log/grafana
+    networks:
+      - loki
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == swarm-test-01
+
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    volumes:
+      - /data/mysql:/var/lib/mysql:rw
+    networks:
+      - storage
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: yft
+    command:
+      --binlog_expire_logs_seconds=86400
+      --max_connections=3000
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --default-time-zone=+8:00
+      --default-authentication-plugin=mysql_native_password
+      --init-connect='SET NAMES UTF8;'
+    restart: unless-stopped
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == swarm-test-01
+
   redis:
     image: redis
     volumes:
