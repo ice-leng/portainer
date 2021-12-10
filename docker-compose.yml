@@ -70,10 +70,10 @@ services:
       - "3100:3100"
     volumes:
       - /data/loki:/etc/loki
-      - /data/config/loki/loki-config.yaml:/etc/loki/config/local-config.yaml
+      - /data/config/loki/loki-config.yaml:/etc/loki/configs/local-config.yaml
       - /data/loki/index:/opt/loki/index
       - /data/loki/chunks:/opt/loki/chunks
-    command: -config.file=/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/configs/local-config.yaml
     networks:
       - loki
     deploy:
