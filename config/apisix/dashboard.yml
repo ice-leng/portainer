@@ -13,11 +13,11 @@ conf:
     error_log:
       level: error # supports levels, lower to higher: debug, info, warn, error, panic, fatal
       file_path:
-        /tmp/log/dash_error.log # supports relative path, absolute path, standard output
+        /data/log/dash_error.log # supports relative path, absolute path, standard output
       # such as: logs/error.log, /tmp/logs/error.log, /dev/stdout, /dev/stderr
     access_log:
       file_path:
-        /tmp/log/dash_access.log  # supports relative path, absolute path, standard output
+        /data/log/dash_access.log  # supports relative path, absolute path, standard output
 authentication:
   secret:
     tTInYShO7VnmHvPR3JwWItpbRlPZPnWq # secret for jwt token generation.
