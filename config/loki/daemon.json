@@ -1,0 +1,9 @@
+{
+  // 安装扩展 docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+  "debug" : true,
+  "log-driver": "loki",
+  "log-opts": {
+    "loki-url": "http://127.0.0.1:3100/api/prom/push",
+    "loki-batch-size": "400"
+  }
+}
