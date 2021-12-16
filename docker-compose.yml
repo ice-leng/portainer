@@ -18,8 +18,8 @@ services:
     depends_on:
       - etcd
     ports:
-      - "9080:9080/tcp"
-      - "9091:9091/tcp"
+      - "80:9080/tcp"
+      - "443:9091/tcp"
     networks:
       - apisix
     deploy:
@@ -58,6 +58,7 @@ services:
       - "2379:2379/tcp"
     networks:
       - apisix
+
     deploy:
       placement:
         constraints:
@@ -121,7 +122,7 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: yft
+      MYSQL_ROOT_PASSWORD: yft20111022
     command:
       --binlog_expire_logs_seconds=86400
       --max_connections=3000
@@ -146,7 +147,7 @@ services:
       - "6379:6379"
     restart: unless-stopped
     command:
-      redis-server --requirepass yft
+      redis-server --requirepass yft20111022
     deploy:
       placement:
         constraints:
