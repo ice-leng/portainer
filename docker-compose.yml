@@ -19,7 +19,7 @@ services:
       - etcd
     ports:
       - "80:9080/tcp"
-      - "443:9091/tcp"
+      - "443:9443/tcp"
     networks:
       - apisix
     deploy:
